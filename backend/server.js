@@ -1,3 +1,28 @@
+const fs = require('fs');
+const path = require('path');
+
+// Process-level error logging for startup errors
+const logStartupError = (error) => {
+    const errorLog = {
+        timestamp: new Date().toISOString(),
+        type: 'STARTUP_ERROR',
+        error: error.message,
+        stack: error.stack
+    };
+    
+    const logPath = path.join(__dirname, './logs/errorLog.txt');
+    const logEntry = `${JSON.stringify(errorLog, null, 2)}\n---\n`;
+    
+    fs.appendFileSync(logPath, logEntry);
+};
+
+// Catch uncaught exceptions during startup
+process.on('uncaughtException', (error) => {
+    logStartupError(error);
+    console.error('Uncaught Exception:', error);
+    process.exit(1);
+});
+
 const express = require('express');
 const dotenv = require('dotenv');
 dotenv.config();
@@ -5,8 +30,6 @@ const reportRouter = require('./routes/reportRouter')
 const uploadRouter = require('./routes/uploadRouter')
 const connectDB = require('./config/db')
 const globalErrorHandler = require('./middlewares/globalError')
-const fs = require('fs');
-const path = require('path');
 const cors = require('cors');
 const app = express();
 
@@ -42,6 +65,7 @@ async function connectServers(){
         // connect to the server
         await connectDB();
 
+
         app.listen( process.env.PORT, (error)=>{
                 if(error){
                     logServerError(error);
@@ -49,11 +73,11 @@ async function connectServers(){
                     process.exit(1);
                 }
                 console.log('Server is Running on Port', process.env.PORT)
-        })
+            })
     }
     catch(error){
         logServerError(error);
-        console.log(error);
+        // console.log(error);
         process.exit(1);
     }
 }

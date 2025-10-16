@@ -7,6 +7,7 @@ const logError = (error, req) => {
         method: req.method,
         url: req.url,
         error: error.message,
+        statusCode: err.statusCode,
         stack: error.stack,
         ip: req.ip
     };

@@ -13,7 +13,7 @@ function Home(){
     const fetchData = useCallback( async ()=>{
 
         try{
-            const response = await fetch(`http://localhost:5000/api/report/all-data`);
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/report/all-data`);
 
             if(!response.ok){
                 throw new Error('Failed to Fetch');
@@ -55,7 +55,7 @@ function Home(){
                 const formData = new FormData();
                 formData.append('file', selectedFile);
 
-                const response = await fetch(`http://localhost:5000/api/upload/xml`, {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/upload/xml`, {
                     method:'POST',
                     body:formData
                 }) 
@@ -74,6 +74,7 @@ function Home(){
                 // add the new submitted data to show the real time change on the UI without reloading the page
                 setFileData(prev=> [...prev, result.data]);
                 toast.success('Uploaded Successfully');
+                
                 // console.log(result);
         }
         catch(error){
@@ -81,6 +82,7 @@ function Home(){
         }
         finally{
             setLoading(false);
+            setSelectedFile(null);
         }
     }
 
@@ -88,7 +90,7 @@ function Home(){
 
         try{
             setLoading(true);
-            const response = await fetch(`http://localhost:5000/api/report/delete/${id}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/report/delete/${id}`, {
                 method:'DELETE'
             })
 

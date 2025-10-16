@@ -14,7 +14,7 @@ function DetailFile(){
     async function fetchData(){
 
         try{
-            const response = await fetch(`http://localhost:5000/api/report/get-single/${id}`);
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/report/get-single/${id}`);
 
             if(!response.ok){
                 throw new Error('Failed to Fetch Try Again');
