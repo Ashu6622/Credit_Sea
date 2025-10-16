@@ -61,25 +61,28 @@ const logServerError = (error) => {
 
 async function connectServers(){
     try{
-        // connect to the db
-        // connect to the server
         await connectDB();
-
-
-        app.listen( process.env.PORT, (error)=>{
+        
+        // Only listen in development or when not deployed
+        if (process.env.NODE_ENV !== 'production' || !process.env.RENDER) {
+            const PORT = process.env.PORT || 5000;
+            app.listen(PORT, (error) => {
                 if(error){
                     logServerError(error);
                     console.log(error);
                     process.exit(1);
                 }
-                console.log('Server is Running on Port', process.env.PORT)
-            })
+                console.log(`Server is Running on Port ${PORT}`);
+            });
+        }
     }
     catch(error){
         logServerError(error);
-        // console.log(error);
         process.exit(1);
     }
 }
 
-connectServers()
+connectServers();
+
+// Export app for Render deployment
+module.exports = app;
