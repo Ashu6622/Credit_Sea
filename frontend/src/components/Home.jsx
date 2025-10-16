@@ -89,7 +89,6 @@ function Home(){
     async function handleDelete(id){
 
         try{
-            setLoading(true);
             const response = await fetch(`${import.meta.env.VITE_API_URL}/report/delete/${id}`, {
                 method:'DELETE'
             })
@@ -116,9 +115,7 @@ function Home(){
         catch(error){
             toast.error(error.message);
         }
-        finally{
-            setLoading(false);
-        }
+       
     }
 
 
